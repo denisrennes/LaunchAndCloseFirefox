@@ -1,5 +1,5 @@
 // LaunchAndCloseFirefox.cpp 
-// Launches Firefox and then close it as a user would do. The goal is to create the Firefox user profile and trigger the "first run only" Firefox 
+// Launch Firefox and then close it as a user would do. The goal is to create the Firefox user profile and trigger the "first run only" Firefox 
 // default pages like "Welcome to Firefox", "Firefox privacy notice", etc. so that they won't be displayed again when the user will launch Firefox.
 //
 #include "pch.h"
@@ -64,8 +64,8 @@ HWND find_main_window(unsigned long process_id)
 }
 
 
-// Send {Alt}+{F4} and {ENTER} keybord keys to the application currently having the keyboard input
-void SendKeys_Alt_F4_ENTER() 
+// Send {Alt}+{F4} keybord keys to the application currently having the keyboard input
+void SendKeys_Alt_F4() 
 {
 
 	// SendInput
@@ -98,8 +98,22 @@ void SendKeys_Alt_F4_ENTER()
 	ip.ki.dwFlags = KEYEVENTF_KEYUP; // KEYEVENTF_KEYUP for key release
 	SendInput(1, &ip, sizeof(INPUT));
 
-	// Wait a while between key pressed
-	Sleep(500);
+}
+
+
+// Send {ENTER} keybord key to the application currently having the keyboard input
+void SendKeys_ENTER()
+{
+
+	// SendInput
+	// This structure will be used to create the keyboard input event.
+	INPUT ip;
+
+	// Set up a generic keyboard event.
+	ip.type = INPUT_KEYBOARD;
+	ip.ki.wScan = 0; // hardware scan code for key
+	ip.ki.time = 0;
+	ip.ki.dwExtraInfo = 0;
 
 	// Press the "ENTER" key
 	ip.ki.wVk = VK_RETURN;	// virtual-key code for the "RETURN" key
@@ -213,7 +227,7 @@ BOOL is_Firefox_running()
 int _tmain(int argc, TCHAR *argv[])
 {
 
-	cout << elapsed_mseconds() << " ms: " << "======= START: LaunchAndCloseFirefox.exe v.1.0 by Denis GAUTIER =======" << endl;
+	cout << elapsed_mseconds() << " ms: " << "======= START: LaunchAndCloseFirefox.exe v.1.1 by Denis GAUTIER =======" << endl;
 	
 	// arg 1: command to launch Firefox
 	TCHAR* sCommand_to_launch_Firefox;
@@ -285,9 +299,13 @@ int _tmain(int argc, TCHAR *argv[])
 						}
 						else 
 						{
-							// Send {Alt}+{F4} and {ENTER} keybord keys to the application currently having the keyboard input
-							SendKeys_Alt_F4_ENTER();
-							cout << elapsed_mseconds() << " ms: " << "ok we activated the main window of this process and waited for it to be in input idle state, then we sent {Alt}+{F4} and {ENTER}" << endl;
+							// Send {Alt}+{F4} then {ENTER} to the application currently having the keyboard input
+							SendKeys_Alt_F4();
+							cout << elapsed_mseconds() << " ms: " << "ok we activated the main window of this process and waited for it to be in input idle state, then we sent {Alt}+{F4}" << endl;
+							Sleep(2000);
+							// Send {ENTER} to the application currently having the keyboard input
+							SendKeys_ENTER();
+							cout << elapsed_mseconds() << " ms: " << "ok we sent {ENTER}" << endl;
 						}
 					}
 				}
@@ -295,7 +313,7 @@ int _tmain(int argc, TCHAR *argv[])
 			} while (Process32Next(hSnap, &pe));
 
 			CloseHandle(hSnap);
-			Sleep(500);
+			Sleep(1000);
 
 		}
 	} while (is_Firefox_running() && ((GetTickCount64() - start_mseconds_phase) <= 30000 ));

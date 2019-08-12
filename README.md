@@ -1,8 +1,8 @@
 LaunchAndCloseFirefox by Denis GAUTIER
 
-This console program launches Firefox and then close it as a user would do.
+This console program launches Firefox and then closes it as a user would do.
 The goals are:
-- Create the Firefox user profile (if not alredy created): this will allow some custom settings in the prefs.js file, etc.
+- Create the Firefox user profile (if not alredy created): this will allow to apply some custom settings in the prefs.js file, etc.
 - Trigger the "first-run-only" Firefox default pages like "Welcome to Firefox", "Firefox privacy notice", etc. so that they won't be displayed again when a real user will launch Firefox.
 This tool is typically used in a new user profile customization script.
 
@@ -14,3 +14,5 @@ There may be several Firefox windows running, so this is repeated as long as we 
 
 3) Exit Code 0 is returned in case of success. In case of error the returned exit code is 1 or higher.
 Log lines are sent to stdout and sterr.
+
+Known issue: this program may fail trying to "activate" Firefox, i.e. set Firefox as the foreground app., if another application is always reset at the foreground. The exit code will not be 0 so teh failure can be detected.
