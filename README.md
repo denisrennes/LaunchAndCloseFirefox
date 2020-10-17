@@ -1,3 +1,5 @@
+2020-10-17: This attempt finally was a dead end. The program works but the goal was not always achieved. (Synchronization issues).
+
 LaunchAndCloseFirefox by Denis GAUTIER
 
 This console program launches Firefox and then closes it as a user would do.
